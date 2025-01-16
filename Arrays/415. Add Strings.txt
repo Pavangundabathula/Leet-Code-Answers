@@ -1,0 +1,73 @@
+415. Add Strings
+Solved
+Easy
+Topics
+Companies
+Given two non-negative integers, num1 and num2 represented as string, return the sum of num1 and num2 as a string.
+
+You must solve the problem without using any built-in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.
+
+ 
+
+Example 1:
+
+Input: num1 = "11", num2 = "123"
+Output: "134"
+Example 2:
+
+Input: num1 = "456", num2 = "77"
+Output: "533"
+Example 3:
+
+Input: num1 = "0", num2 = "0"
+Output: "0"
+ 
+
+Code:
+
+class Solution {
+    public String addStrings(String num1, String num2) {
+        String str="";
+        int carry=0;
+        String first="";
+        String second="";
+        if(num1.length()<num2.length()){
+            first=num1;
+            second=num2;
+        }else{
+            first=num2;
+            second=num1;
+        }
+        int i;
+        for(i=1;first.length()-i>=0;i++){
+            int n1=first.charAt(first.length()-i)- '0';
+            int n2=second.charAt(second.length()-i)- '0';
+            int sum=(n1+n2+carry);
+            carry=sum/10;
+            sum=sum%10;
+            System.out.println(n1+" "+n2+" "+sum+" "+carry);
+            String st=String.valueOf(sum);
+            System.out.println(st);
+            str+=st;
+        }
+        while(second.length()-i>=0){
+            int n1=second.charAt(second.length()-i)-'0';
+            int sum=(n1+carry);
+            carry=sum/10;
+            sum=sum%10;
+            System.out.println(n1+" "+" "+sum+" "+carry);
+            String st=String.valueOf(sum);
+            System.out.println(st);
+            str+=st;
+            i++;
+        }
+        if(carry>0){
+            str+=String.valueOf(carry);
+        }
+        String reverse="";
+        for(int j=str.length()-1;j>=0;j--){
+            reverse+=str.charAt(j);
+        }
+        return reverse;
+    }
+}
