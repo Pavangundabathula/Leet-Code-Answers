@@ -1,0 +1,39 @@
+22. Generate Parentheses
+Solved
+Medium
+Topics
+Companies
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+ 
+
+Example 1:
+
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+
+Input: n = 1
+Output: ["()"]
+
+Code:
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> l1=new ArrayList<>();
+        generate(l1,"",0,0,n);
+        return l1;
+    }
+    public void generate(List<String> l1,String p,int open,int close,int max){
+        if(p.length()==(max*2)){
+            l1.add(p);
+            return ;
+        }
+        if(open<max){
+            generate(l1,p+"(",open+1,close,max);
+        }
+        if(close<open){
+            generate(l1,p+")",open,close+1,max);
+        }
+    }
+}
