@@ -1,0 +1,86 @@
+542. 01 Matrix
+Solved
+Medium
+Topics
+Companies
+Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+
+The distance between two cells sharing a common edge is 1.
+
+ 
+
+Example 1:
+
+
+Input: mat = [[0,0,0],[0,1,0],[0,0,0]]
+Output: [[0,0,0],[0,1,0],[0,0,0]]
+Example 2:
+
+
+Input: mat = [[0,0,0],[0,1,0],[1,1,1]]
+Output: [[0,0,0],[0,1,0],[1,2,1]]
+ 
+
+Constraints:
+
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 104
+1 <= m * n <= 104
+mat[i][j] is either 0 or 1.
+There is at least one 0 in mat.
+ 
+
+Code:
+
+class Pair{
+    int row;
+    int col;
+    int dis;
+    
+    public Pair(int row,int col,int dis){
+        this.row=row;
+        this.col=col;
+        this.dis=dis;
+    }
+}
+class Solution {
+    public int[][] updateMatrix(int[][] mat) {
+        Queue<Pair> queue=new LinkedList<>();
+        for(int i=0;i<mat.length;i++){
+            for(int j=0;j<mat[i].length;j++){
+                if(mat[i][j]==0){
+                    queue.offer(new Pair(i,j,0));
+                }
+            }
+        }
+
+        int[][] visited=new int[mat.length][mat[0].length];
+        while(!queue.isEmpty()){
+            Pair obj=queue.poll();
+            int r=obj.row;
+            int c=obj.col;
+            int d=obj.dis;
+            mat[r][c]=d;
+
+            if(r-1>=0 && mat[r-1][c]==1  && visited[r-1][c]!=1){
+                visited[r-1][c]=1;
+                queue.offer(new Pair(r-1,c,d+1));
+            }
+            if(r+1<mat.length && mat[r+1][c]==1  && visited[r+1][c]!=1){
+                visited[r+1][c]=1;
+                queue.offer(new Pair(r+1,c,d+1));
+            }
+            if(c-1>=0 && mat[r][c-1]==1  && visited[r][c-1]!=1){
+                visited[r][c-1]=1;
+                queue.offer(new Pair(r,c-1,d+1));
+            }
+            if(c+1<mat[0].length && mat[r][c+1]==1  && visited[r][c+1]!=1){
+                visited[r][c+1]=1;
+                queue.offer(new Pair(r,c+1,d+1));
+            }
+        }
+
+        return mat;
+    }
+}
