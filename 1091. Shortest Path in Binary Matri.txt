@@ -1,0 +1,111 @@
+1091. Shortest Path in Binary Matrix
+Solved
+Medium
+Topics
+premium lock icon
+Companies
+Hint
+Given an n x n binary matrix grid, return the length of the shortest clear path in the matrix. If there is no clear path, return -1.
+
+A clear path in a binary matrix is a path from the top-left cell (i.e., (0, 0)) to the bottom-right cell (i.e., (n - 1, n - 1)) such that:
+
+All the visited cells of the path are 0.
+All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner).
+The length of a clear path is the number of visited cells of this path.
+
+ 
+
+Example 1:
+
+
+Input: grid = [[0,1],[1,0]]
+Output: 2
+Example 2:
+
+
+Input: grid = [[0,0,0],[1,1,0],[1,1,0]]
+Output: 4
+Example 3:
+
+Input: grid = [[1,0,0],[1,1,0],[1,1,0]]
+Output: -1
+ 
+
+Constraints:
+
+n == grid.length
+n == grid[i].length
+1 <= n <= 100
+grid[i][j] is 0 or 1
+
+Code:
+
+class Pair{
+    int dist;
+    int row;
+    int col;
+    public Pair(int dist,int row,int col){
+        this.dist=dist;
+        this.row=row;
+        this.col=col;
+    }
+}
+class Solution {
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        int[][] dis=new int[grid.length][grid[0].length];
+        for(int[] r:dis){
+            Arrays.fill(r,Integer.MAX_VALUE);
+        }
+        if(grid[0][0]==1){
+            return -1;
+        }
+        dis[0][0]=1;
+        Queue<Pair> q=new LinkedList<>();
+        q.add(new Pair(1,0,0));
+        
+        while(!q.isEmpty()){
+            Pair obj=q.remove();
+            int dist=obj.dist;
+            int row=obj.row;
+            int col=obj.col;
+            
+            if(row-1>=0 && grid[row-1][col]==0 && dist+1<dis[row-1][col]){
+                dis[row-1][col]=dist+1;
+                q.add(new Pair(dist+1,row-1,col));
+            }
+            if(row+1<grid.length && grid[row+1][col]==0 && dist+1<dis[row+1][col]){
+                dis[row+1][col]=dist+1;
+                q.add(new Pair(dist+1,row+1,col));
+            }
+            if(col-1>=0 && grid[row][col-1]==0 && dist+1<dis[row][col-1]){
+                dis[row][col-1]=dist+1;
+                q.add(new Pair(dist+1,row,col-1));
+            }
+            if(col+1<grid[0].length && grid[row][col+1]==0 && dist+1<dis[row][col+1]){
+                dis[row][col+1]=dist+1;
+                q.add(new Pair(dist+1,row,col+1));
+            }
+            int r=row;
+            int c=col;
+            if(r-1>=0 && c-1>=0 && grid[r-1][c-1]==0 && dist+1<dis[r-1][c-1]){
+                dis[r-1][c-1]=dist+1;
+                q.add(new Pair(dist+1,r-1,c-1));
+            }
+            if(r-1>=0 && c+1<grid[0].length && grid[r-1][c+1]==0 && dist+1<dis[r-1][c+1]){
+                dis[r-1][c+1]=dist+1;
+                q.add(new Pair(dist+1,r-1,c+1));
+            }
+            if(r+1<grid.length && c-1>=0 && grid[r+1][c-1]==0 && dist+1<dis[r+1][c-1]){
+                dis[r+1][c-1]=dist+1;
+                q.add(new Pair(dist+1,r+1,c-1));
+            }
+            if(r+1<grid.length && c+1<grid[0].length && grid[r+1][c+1]==0 && dist+1<dis[r+1][c+1]){
+                dis[r+1][c+1]=dist+1;
+                q.add(new Pair(dist+1,r+1,c+1));
+            }
+        }
+        
+        return dis[grid.length-1][grid[0].length-1]==Integer.MAX_VALUE?-1:dis[grid.length-1][grid[0].length-1];
+        
+    }
+}
