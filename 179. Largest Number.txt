@@ -1,0 +1,61 @@
+179. Largest Number
+Solved
+Medium
+Topics
+premium lock icon
+Companies
+Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
+
+Since the result may be very large, so you need to return a string instead of an integer.
+
+ 
+
+Example 1:
+
+Input: nums = [10,2]
+Output: "210"
+Example 2:
+
+Input: nums = [3,30,34,5,9]
+Output: "9534330"
+ 
+
+Constraints:
+
+1 <= nums.length <= 100
+0 <= nums[i] <= 109
+
+Code:
+class Solution {
+    public String largestNumber(int[] nums) {
+        for(int i=0;i<nums.length;i++){
+            for(int j=i+1;j<nums.length;j++){
+                if(nums[i]==0){
+                    int temp=nums[i];
+                    nums[i]=nums[j];
+                    nums[j]=temp;
+                    continue;
+                }else if(nums[j]==0){
+                    continue;
+                }
+                long d1=(long)Math.log10(nums[i])+1;
+                long d2=(long)Math.log10(nums[j])+1;
+                long ij=nums[i]*(long)(Math.pow(10,d2))+nums[j];
+                long ji=nums[j]*(long)(Math.pow(10,d1))+nums[i];
+                if(ji>ij){
+                    int temp=nums[i];
+                    nums[i]=nums[j];
+                    nums[j]=temp;
+                }
+            }
+        }
+        if(nums[0]==0){
+            return "0";
+        }
+        StringBuilder str=new StringBuilder("");
+        for(int num:nums){
+            str.append(Integer.toString(num));
+        }
+        return str.toString();
+    }
+}
