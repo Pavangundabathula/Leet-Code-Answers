@@ -1,0 +1,111 @@
+1319. Number of Operations to Make Network Connected
+Solved
+Medium
+Topics
+premium lock icon
+Companies
+Hint
+There are n computers numbered from 0 to n - 1 connected by ethernet cables connections forming a network where connections[i] = [ai, bi] represents a connection between computers ai and bi. Any computer can reach any other computer directly or indirectly through the network.
+
+You are given an initial computer network connections. You can extract certain cables between two directly connected computers, and place them between any pair of disconnected computers to make them directly connected.
+
+Return the minimum number of times you need to do this in order to make all the computers connected. If it is not possible, return -1.
+
+ 
+
+Example 1:
+
+
+Input: n = 4, connections = [[0,1],[0,2],[1,2]]
+Output: 1
+Explanation: Remove cable between computer 1 and 2 and place between computers 1 and 3.
+Example 2:
+
+
+Input: n = 6, connections = [[0,1],[0,2],[0,3],[1,2],[1,3]]
+Output: 2
+Example 3:
+
+Input: n = 6, connections = [[0,1],[0,2],[0,3],[1,2]]
+Output: -1
+Explanation: There are not enough cables.
+ 
+
+Constraints:
+
+1 <= n <= 105
+1 <= connections.length <= min(n * (n - 1) / 2, 105)
+connections[i].length == 2
+0 <= ai, bi < n
+ai != bi
+There are no repeated connections.
+No two computers are connected by more than one cable.
+
+Code:
+
+class Solution {
+    public int makeConnected(int n, int[][] connections) {
+        Dsu obj=new Dsu(n);
+        int extra=0;
+        for(int i=0;i<connections.length;i++){
+            int u=connections[i][0];
+            int v=connections[i][1];
+            if(obj.findparent(u)==obj.findparent(v)){
+                extra++;
+            }else{
+                obj.unionbysize(u,v);
+            }
+        }
+
+        int count=0;
+
+        for(int i=0;i<n;i++){
+            if(obj.findparent(i)==i){
+                count++;
+            }
+        }
+        count--;
+        return extra>=count?count:-1;
+    }
+}
+
+class Dsu{
+    List<Integer> size=new ArrayList<>();
+    List<Integer> parent=new ArrayList<>();
+
+    public Dsu(int V){
+        for(int i=0;i<=V;i++){
+            size.add(1);
+            parent.add(i);
+        }
+    }
+
+    public int findparent(int u){
+        int pa=parent.get(u);
+        if(u==pa){
+            return u;
+        }
+
+        parent.set(u,findparent(pa));
+        return parent.get(u);        
+    }
+
+    public void unionbysize(int u,int v){
+        int pu=findparent(u);
+        int pv=findparent(v);
+
+        if(pu==pv){
+            return ;
+        }
+
+        int s1=size.get(pu);
+        int s2=size.get(pv);
+        if(s1<s2){
+            parent.set(pu,pv);
+            size.set(v,s1+s2);
+        }else{
+            parent.set(pv,pu);
+            size.set(u,s1+s2);
+        }
+    }
+}
