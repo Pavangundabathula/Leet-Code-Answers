@@ -1,0 +1,160 @@
+827. Making A Large Island
+Solved
+Hard
+Topics
+premium lock icon
+Companies
+You are given an n x n binary matrix grid. You are allowed to change at most one 0 to be 1.
+
+Return the size of the largest island in grid after applying this operation.
+
+An island is a 4-directionally connected group of 1s.
+
+ 
+
+Example 1:
+
+Input: grid = [[1,0],[0,1]]
+Output: 3
+Explanation: Change one 0 to 1 and connect two 1s, then we get an island with area = 3.
+Example 2:
+
+Input: grid = [[1,1],[1,0]]
+Output: 4
+Explanation: Change the 0 to 1 and make the island bigger, only one island with area = 4.
+Example 3:
+
+Input: grid = [[1,1],[1,1]]
+Output: 4
+Explanation: Can't change any 0 to 1, only one island with area = 4.
+ 
+
+Constraints:
+
+n == grid.length
+n == grid[i].length
+1 <= n <= 500
+grid[i][j] is either 0 or 1.
+
+Code:
+
+class Solution {
+    public int largestIsland(int[][] grid) {
+        int n=grid.length;
+        int m=grid[0].length;
+        Dsu obj=new Dsu(n*n);
+        int max=0;
+
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                if(grid[i][j]==1){
+                    int in=((i)*m+j);
+
+                    if(i-1>=0 && grid[i-1][j]==1){
+                        int ind=(i-1)*m+j;
+                        obj.unionbysize(in,ind);
+                    }
+
+                    if(i+1<n && grid[i+1][j]==1){
+                        int ind=(i+1)*m+j;
+                        obj.unionbysize(in,ind);
+                    }
+
+                    if(j-1>=0 && grid[i][j-1]==1){
+                        int ind=(i)*m+(j-1);
+                        obj.unionbysize(in,ind);
+                    }
+                    if(j+1<m && grid[i][j+1]==1){
+                        int ind=(i)*m+(j+1);
+                        obj.unionbysize(in,ind);
+                    }
+                }
+            }
+
+        }
+
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                HashSet<Integer> set=new HashSet<>();
+                
+                if(grid[i][j]==0){
+
+                    if(i-1>=0 && grid[i-1][j]==1){
+                        int ind=(i-1)*m+j;
+                        int pu=obj.findparent(ind);
+                        set.add(pu);
+                    }
+
+                    if(i+1<n && grid[i+1][j]==1){
+                        int ind=(i+1)*m+j;
+                        int pu=obj.findparent(ind);
+                        set.add(pu);
+                    }
+
+                    if(j-1>=0 && grid[i][j-1]==1){
+                        int ind=(i)*m+(j-1);
+                        int pu=obj.findparent(ind);
+                        set.add(pu);
+                    }
+                    if(j+1<m && grid[i][j+1]==1){
+                        int ind=(i)*m+(j+1);
+                        int pu=obj.findparent(ind);
+                        set.add(pu);
+                    }
+                    int size=0;
+                    for(Integer parent:set){
+                        size+=obj.size.get(parent);
+                    }
+                    max=Math.max(max,size+1);
+                }
+            }
+        }
+
+        for(int i=0;i<n*n;i++){
+            int pa=obj.findparent(i);
+            max=Math.max(max,obj.size.get(pa));
+        }
+        return max;
+    }
+}
+
+class Dsu{
+    List<Integer> size=new ArrayList<>();
+    List<Integer> parent=new ArrayList<>();
+
+    public Dsu(int V){
+        for(int i=0;i<=V;i++){
+            size.add(1);
+            parent.add(i);
+        }
+    }
+
+    public int findparent(int u){
+        int pa=parent.get(u);
+        if(u==pa){
+            return u;
+        }
+
+        parent.set(u,findparent(pa));
+        return parent.get(u);        
+    }
+
+    public void unionbysize(int u,int v){
+        int pu=findparent(u);
+        int pv=findparent(v);
+
+        if(pu==pv){
+            return ;
+        }
+
+        int s1=size.get(pu);
+        int s2=size.get(pv);
+        if(s1<s2){
+            parent.set(pu,pv);
+            size.set(pv,s1+s2);
+        }else{
+            parent.set(pv,pu);
+            size.set(pu,s1+s2);
+        }
+    }
+}
