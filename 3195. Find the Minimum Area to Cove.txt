@@ -1,0 +1,82 @@
+3195. Find the Minimum Area to Cover All Ones I
+Solved
+Medium
+Topics
+premium lock icon
+Companies
+Hint
+You are given a 2D binary array grid. Find a rectangle with horizontal and vertical sides with the smallest area, such that all the 1's in grid lie inside this rectangle.
+
+Return the minimum possible area of the rectangle.
+
+ 
+
+Example 1:
+
+Input: grid = [[0,1,0],[1,0,1]]
+
+Output: 6
+
+Explanation:
+
+
+
+The smallest rectangle has a height of 2 and a width of 3, so it has an area of 2 * 3 = 6.
+
+Example 2:
+
+Input: grid = [[1,0],[0,0]]
+
+Output: 1
+
+Explanation:
+
+
+
+The smallest rectangle has both height and width 1, so its area is 1 * 1 = 1.
+
+ 
+
+Constraints:
+
+1 <= grid.length, grid[i].length <= 1000
+grid[i][j] is either 0 or 1.
+The input is generated such that there is at least one 1 in grid.
+
+
+Code:
+
+class Solution {
+    public int minimumArea(int[][] grid) {
+        int rs=-1;
+        int re=-1;
+        int cs=-1;
+        int ce=-1;
+
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[i].length;j++){
+                if(grid[i][j]==1){
+                    if(rs==-1 && re==-1){
+                        rs=i;
+                        re=i;
+                    }else if(rs<i && re<i){
+                        re=i;
+                    }else if(i<re && i<rs){
+                        rs=i;
+                    }
+
+                    if(cs==-1 && ce==-1){
+                        cs=j;
+                        ce=j;
+                    }else if(cs<j && ce<j){
+                        ce=j;
+                    }else if(j<ce && j<cs){
+                        cs=j;
+                    }
+                }
+            }
+        }
+
+        return (re-rs+1)*(ce-cs+1);
+    }
+}
