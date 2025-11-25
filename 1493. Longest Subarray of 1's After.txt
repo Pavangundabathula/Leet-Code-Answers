@@ -1,0 +1,75 @@
+1493. Longest Subarray of 1's After Deleting One Element
+Solved
+Medium
+Topics
+premium lock icon
+Companies
+Hint
+Given a binary array nums, you should delete one element from it.
+
+Return the size of the longest non-empty subarray containing only 1's in the resulting array. Return 0 if there is no such subarray.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,0,1]
+Output: 3
+Explanation: After deleting the number in position 2, [1,1,1] contains 3 numbers with value of 1's.
+Example 2:
+
+Input: nums = [0,1,1,1,0,1,1,0,1]
+Output: 5
+Explanation: After deleting the number in position 4, [0,1,1,1,1,1,0,1] longest subarray with value of 1's is [1,1,1,1,1].
+Example 3:
+
+Input: nums = [1,1,1]
+Output: 2
+Explanation: You must delete one element.
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+nums[i] is either 0 or 1.
+
+Code:
+
+class Solution {
+    public int longestSubarray(int[] nums) {
+        int ones=0;
+        int bz=0;
+        int az=0;
+        boolean is=false;
+        int zeroes=0;
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]==1){
+                if(is){
+                    bz++;
+                }else if(!is){
+                    az++;
+                }
+            }else{
+                zeroes++;
+                if(zeroes==1 && i<nums.length-1 && nums[i+1]==0){
+                    bz=0;
+                    az=0;
+                    i++;
+                    zeroes=0;
+                    is=true;
+                }else if(zeroes==1){
+                    bz=az;
+                    az=0;
+                    zeroes=0;
+                }
+                is=false;
+            }
+
+            ones=Math.max(ones,bz+az);
+        }
+        if(ones==nums.length){
+            ones--;
+        }
+        return ones;
+    }
+}
